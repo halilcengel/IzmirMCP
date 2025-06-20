@@ -1,21 +1,26 @@
 {
-  "name": "IzmirMCP",
-  "author": "halilcengel",
-  "version": "1.0.0",
+  "name": "izmir-mcp",
+  "version": "1.0.2",
   "description": "TypeScript MCP server for real-time İZBAN & ESHOT data: vehicle positions, arrivals & schedules.",
   "type": "module",
+  "main": "./build/app.js",
   "bin": {
-    "IzmirMCP": "./build/index.js"
+    "izmir-mcp": "./build/app.js"
   },
   "scripts": {
+    "start": "node build/app.js",
     "build": "tsc"
   },
   "files": [
     "build"
   ],
   "keywords": [],
-  "author": "",
+  "author": "halilcengel",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/halilcengel/IzmirMCP"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.13.0",
     "axios": "^1.10.0",
