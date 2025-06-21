@@ -1,27 +1,41 @@
 {
   "name": "izmir-mcp",
-  "version": "1.0.3",
+  "version": "1.0.8",
   "description": "TypeScript MCP server for real-time İZBAN & ESHOT data: vehicle positions, arrivals & schedules.",
   "type": "module",
-  "main": "./build/app.js",
+  "main": "build/app.js",
   "bin": {
     "izmir-mcp": "./build/app.js"
   },
   "scripts": {
     "start": "node build/app.js",
-    "build": "tsc"
+    "build": "tsc && npm run create-bin",
+    "create-bin": "node scripts/create-bin.js",
+    "prepublishOnly": "npm run build"
   },
   "files": [
-    "build"
+    "build/**/*"
   ],
-  "keywords": [],
+  "keywords": [
+    "mcp",
+    "modelcontextprotocol",
+    "izban",
+    "eshot",
+    "izmir",
+    "transport",
+    "api"
+  ],
   "author": "halilcengel",
   "license": "ISC",
   "repository": {
     "type": "git",
     "url": "https://github.com/halilcengel/IzmirMCP"
   },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
+    "@modelcontextprotocol/inspector": "^0.14.3",
     "@modelcontextprotocol/sdk": "^1.13.0",
     "axios": "^1.10.0",
     "express": "^5.1.0",

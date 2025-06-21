@@ -1,5 +1,6 @@
-import { registerEshotTools, registerIzbanTools } from "./tools/index.js";
+#!/usr/bin/env node
 
+import { registerEshotTools, registerIzbanTools } from "./tools/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { server } from "./server.js";
 
@@ -13,7 +14,6 @@ async function app() {
 }
 
 app().catch((error) => {
-    console.error("Fatal error in app():", error);
+  console.error("Fatal error in app():", error);
   process.exit(1);
 });
-
