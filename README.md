@@ -1,63 +1,66 @@
 # IzmirMCP
 
-İzmir Büyükşehir Belediyesi’nin İZBAN ve ESHOT sistemlerinden gerçek zamanlı toplu taşıma verilerini, MCP (Model Context Protocol) tabanlı TypeScript sunucusu aracılığıyla kolayca entegre etmenizi sağlayan açık kaynaklı bir araç seti.
+[![NPM version](https://img.shields.io/npm/v/izmir-mcp.svg)](https://www.npmjs.com/package/izmir-mcp)
+[![License](https://img.shields.io/npm/l/izmir-mcp.svg)](https://github.com/halilcengel/IzmirMCP/blob/main/LICENSE)
+
+İzmir Büyükşehir Belediyesi'nin İZBAN ve ESHOT sistemlerinden gerçek zamanlı toplu taşıma verilerini, MCP (Model Context Protocol) tabanlı bir TypeScript sunucusu aracılığıyla yapay zeka modellerine ve diğer uygulamalara kolayca entegre etmenizi sağlayan açık kaynaklı bir araç setidir.
 
 ---
 
-## Özellikler
+## ✨ Özellikler
 
-* **İZBAN**
-
-  * İstasyon listeleri
-  * Belirli istasyonlar arası sefer saatleri
-* **ESHOT**
-
-  * Durak ve hat arama
-  * Yaklaşan otobüs bilgisi
-  * Hattaki tüm araçların gerçek zamanlı GPS konumları
-* **Kolay Entegrasyon**
-
-  * Node.js/TypeScript ile yazılmış
-  * Genişletilebilir altyapı
+*   **🚉 İZBAN**
+    *   Tüm istasyonların listesini alın.
+    *   Belirli istasyonlar arasındaki sefer saatlerini sorgulayın.
+*   **🚌 ESHOT**
+    *   Durak ve hat adı veya numarasına göre arama yapın.
+    *   Bir durağa yaklaşan otobüsleri anlık olarak takip edin.
+    *   Belirli bir hattaki tüm araçların gerçek zamanlı GPS konumlarını alın.
+*   **🔧 Kolay Entegrasyon**
+    *   Node.js/TypeScript ile hızlı ve modern bir altyapı.
+    *   Genişletilebilir ve modüler mimari.
+    *   Yapay zeka (AI) ve MCP tabanlı sistemlerle (Claude vb.) doğrudan uyumlu.
 
 ---
 
-## Kurulum
+## 🚀 Kurulum
 
-1. Depoyu klonlayın:
+1.  Depoyu klonlayın:
 
-   ```bash
-   git clone https://github.com/halilcengel/IzmirMCP.git
-   cd IzmirMCP
-   ```
+    ```bash
+    git clone https://github.com/halilcengel/IzmirMCP.git
+    cd IzmirMCP
+    ```
 
-2. Bağımlılıkları yükleyin:
+2.  Bağımlılıkları yükleyin:
 
-   ```bash
-   npm install
-   ```
+    ```bash
+    npm install
+    ```
 
-3. Projeyi derleyin:
+3.  Projeyi derleyin:
 
-   ```bash
-   npm run build
-   ```
+    ```bash
+    npm run build
+    ```
 
 ---
 
-## Kullanım
+## 🛠️ Kullanım
 
-Yerel olarak çalıştırmak için:
+Sunucuyu yerel olarak başlatmak için:
 
 ```bash
 npx izmir-mcp
 ```
 
+Sunucu varsayılan olarak `3000` portunda çalışmaya başlayacaktır.
+
 ---
 
-## Claude veya Diğer MCP İstemcilerine Ekleme
+## 🤖 Claude veya Diğer MCP İstemcilerine Ekleme
 
-Aşağıdaki örnek yapılandırma ile `izmir-mcp` sunucunuzu Claude gibi bir MCP istemcisine ekleyebilirsiniz:
+`izmir-mcp` sunucusunu, Claude gibi bir MCP (Model Context Protocol) istemcisine entegre etmek için aşağıdaki gibi bir yapılandırma kullanabilirsiniz. Bu, yapay zeka modelinizin İzmir toplu taşıma verilerine doğrudan erişmesini sağlar.
 
 ```json
 {
@@ -74,36 +77,88 @@ Aşağıdaki örnek yapılandırma ile `izmir-mcp` sunucunuzu Claude gibi bir MC
 
 ---
 
-## Araçlar (Tools)
+## 🧰 Araçlar (Tools)
 
-### ESHOT
-
-```ts
-registerEshotTools(server);
-```
-
-* `get-eshot-stations`
-* `get-eshot-lines`
-* `get-line-approaching-buses`
-* `get-line-bus-locations`
-* `get-station-approaching-buses`
+Bu proje, İZBAN ve ESHOT servisleri için bir dizi araç sunar. Bu araçları kullanarak toplu taşıma verilerine programatik olarak erişebilirsiniz.
 
 ### İZBAN
 
+İZBAN ile ilgili araçları sunucuya eklemek için:
+
 ```ts
+import { registerIzbanTools } from 'izmir-mcp';
+// ...
 registerIzbanTools(server);
 ```
 
-* `get-izban-stations`
-* `get-izban-departures`
+**Kullanılabilir Araçlar:**
+
+*   `get-izban-stations`
+    *   **Açıklama:** Tüm İZBAN istasyonlarının tam listesini ID'leri ve isimleriyle birlikte döndürür.
+    *   **Parametreler:** Yok.
+*   `get-izban-departures`
+    *   **Açıklama:** İki İZBAN istasyonu arasındaki planlanmış seferleri listeler.
+    *   **Parametreler:**
+        *   `departureStationId` (string): Kalkış istasyonunun ID'si.
+        *   `arrivalStationId` (string): Varış istasyonunun ID'si.
+
+### ESHOT
+
+ESHOT ile ilgili araçları sunucuya eklemek için:
+
+```ts
+import { registerEshotTools } from 'izmir-mcp';
+// ...
+registerEshotTools(server);
+```
+
+**Kullanılabilir Araçlar:**
+
+*   `get-eshot-stations`
+    *   **Açıklama:** Durak adı veya adresine göre arama yaparak eşleşen ESHOT durak kayıtlarını döndürür.
+    *   **Parametreler:**
+        *   `query` (string, opsiyonel): Aranacak durak adı veya adresi (örn: 'Alsancak').
+        *   `limit` (number, opsiyonel): Döndürülecek maksimum durak sayısı.
+*   `get-eshot-lines`
+    *   **Açıklama:** Hat numarası veya adına göre arama yaparak eşleşen ESHOT hat kayıtlarını döndürür.
+    *   **Parametreler:**
+        *   `query` (string, opsiyonel): Aranacak hat numarası veya adı (örn: '202' veya 'Bornova').
+        *   `limit` (number, opsiyonel): Döndürülecek maksimum hat sayısı.
+*   `get-line-approaching-buses`
+    *   **Açıklama:** Belirli bir hattaki otobüslerin belirli bir durağa yaklaşma durumunu gösterir.
+    *   **Parametreler:**
+        *   `hatNo` (string): Otobüs hat numarası (örn: '551').
+        *   `durakId` (string): Durak ID'si.
+*   `get-line-bus-locations`
+    *   **Açıklama:** Belirli bir hattaki tüm otobüslerin gerçek zamanlı konumlarını döndürür.
+    *   **Parametreler:**
+        *   `hatNo` (string): Otobüs hat numarası (örn: '551').
+*   `get-station-approaching-buses`
+    *   **Açıklama:** Belirli bir durağa yaklaşmakta olan tüm otobüslerin gerçek zamanlı konumlarını döndürür.
+    *   **Parametreler:**
+        *   `durakId` (string): Durak ID'si.
 
 ---
 
+## 🤝 Katkıda Bulunma
 
+Bu proje topluluk katkılarına açıktır. Eğer bir hata bulduysanız, yeni bir özellik eklemek isterseniz veya mevcut kodu iyileştirmek isterseniz, lütfen bir "issue" açın veya "pull request" gönderin.
+
+1.  Projeyi "fork"layın.
+2.  Yeni bir "branch" oluşturun (`git checkout -b ozellik/yeni-bir-ozellik`).
+3.  Değişikliklerinizi "commit"leyin (`git commit -am 'Yeni bir özellik eklendi'`).
+4.  "Branch"inizi "push"layın (`git push origin ozellik/yeni-bir-ozellik`).
+5.  Bir "Pull Request" oluşturun.
 
 ---
 
-## Lisans
+## 📜 Lisans
 
-ISC License
+Bu proje [ISC Lisansı](https://github.com/halilcengel/IzmirMCP/blob/main/LICENSE) altında lisanslanmıştır.
+
+---
+
+## ⚠️ Sorumluluk Reddi
+
+Bu proje, İzmir Büyükşehir Belediyesi'nin resmi bir uygulaması değildir. Veriler, herkese açık olan İBB API'lerinden alınmaktadır. Verilerin doğruluğu ve güncelliği konusunda herhangi bir garanti verilmemektedir. Proje, yalnızca bilgilendirme ve geliştirme amacıyla oluşturulmuştur.
 
