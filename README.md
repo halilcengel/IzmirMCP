@@ -74,6 +74,10 @@ Sunucu varsayılan olarak `3000` portunda çalışmaya başlayacaktır.
   }
 }
 ```
+![Screenshot 2025-06-21 142156](https://github.com/user-attachments/assets/8fa2909d-7305-4a73-a95a-e0571075e15d)
+![Screenshot 2025-06-21 142143](https://github.com/user-attachments/assets/17d000e7-18e9-44ac-aa21-000de072129b)
+---
+![Screenshot 2025-06-21 141825](https://github.com/user-attachments/assets/01753c47-fc4f-48b3-a9fe-e0899bf80df4)
 
 ---
 
