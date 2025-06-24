@@ -1,6 +1,6 @@
 {
   "name": "izmir-mcp",
-  "version": "1.0.8",
+  "version": "1.1.0",
   "description": "TypeScript MCP server for real-time İZBAN & ESHOT data: vehicle positions, arrivals & schedules.",
   "type": "module",
   "main": "build/app.js",

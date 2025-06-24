@@ -3,7 +3,7 @@
 [![NPM version](https://img.shields.io/npm/v/izmir-mcp.svg)](https://www.npmjs.com/package/izmir-mcp)
 [![License](https://img.shields.io/npm/l/izmir-mcp.svg)](https://github.com/halilcengel/IzmirMCP/blob/main/LICENSE)
 
-İzmir Büyükşehir Belediyesi'nin İZBAN ve ESHOT sistemlerinden gerçek zamanlı toplu taşıma verilerini, MCP (Model Context Protocol) tabanlı bir TypeScript sunucusu aracılığıyla yapay zeka modellerine ve diğer uygulamalara kolayca entegre etmenizi sağlayan açık kaynaklı bir araç setidir.
+İzmir Büyükşehir Belediyesi'nin İZBAN, ESHOT, Tramvay, Metro, Vapur (İzdeniz) ve Tren sistemlerinden gerçek zamanlı toplu taşıma verilerini, MCP (Model Context Protocol) tabanlı bir TypeScript sunucusu aracılığıyla yapay zeka modellerine ve diğer uygulamalara kolayca entegre etmenizi sağlayan açık kaynaklı bir araç setidir.
 
 ---
 
@@ -12,10 +12,20 @@
 *   **🚉 İZBAN**
     *   Tüm istasyonların listesini alın.
     *   Belirli istasyonlar arasındaki sefer saatlerini sorgulayın.
+    *   Banliyö fiyat tarifesini sorgulayın.
 *   **🚌 ESHOT**
     *   Durak ve hat adı veya numarasına göre arama yapın.
     *   Bir durağa yaklaşan otobüsleri anlık olarak takip edin.
     *   Belirli bir hattaki tüm araçların gerçek zamanlı GPS konumlarını alın.
+    *   Koordinata göre yakın durakları sorgulayın.
+*   **🚋 Tramvay**
+    *   Tramvay hatlarını, istasyonlarını ve sefer sıklıklarını sorgulayın.
+*   **🚇 Metro**
+    *   Metro istasyonlarını ve sefer sıklıklarını sorgulayın.
+*   **⛴️ Vapur (İzdeniz)**
+    *   Vapur iskeleleri, hareket saatleri ve çalışma günlerini sorgulayın.
+*   **🚂 Tren**
+    *   İzmir'deki tren garlarını ve konumlarını sorgulayın.
 *   **🔧 Kolay Entegrasyon**
     *   Node.js/TypeScript ile hızlı ve modern bir altyapı.
     *   Genişletilebilir ve modüler mimari.
@@ -83,64 +93,112 @@ Sunucu varsayılan olarak `3000` portunda çalışmaya başlayacaktır.
 
 ## 🧰 Araçlar (Tools)
 
-Bu proje, İZBAN ve ESHOT servisleri için bir dizi araç sunar. Bu araçları kullanarak toplu taşıma verilerine programatik olarak erişebilirsiniz.
+Bu proje, İZBAN, ESHOT, Tramvay, Metro, Vapur (İzdeniz) ve Tren servisleri için bir dizi araç sunar. Bu araçları kullanarak toplu taşıma verilerine programatik olarak erişebilirsiniz.
 
 ### İZBAN
 
-İZBAN ile ilgili araçları sunucuya eklemek için:
-
 ```ts
 import { registerIzbanTools } from 'izmir-mcp';
-// ...
 registerIzbanTools(server);
 ```
 
 **Kullanılabilir Araçlar:**
 
-*   `get-izban-stations`
-    *   **Açıklama:** Tüm İZBAN istasyonlarının tam listesini ID'leri ve isimleriyle birlikte döndürür.
-    *   **Parametreler:** Yok.
-*   `get-izban-departures`
-    *   **Açıklama:** İki İZBAN istasyonu arasındaki planlanmış seferleri listeler.
-    *   **Parametreler:**
-        *   `departureStationId` (string): Kalkış istasyonunun ID'si.
-        *   `arrivalStationId` (string): Varış istasyonunun ID'si.
+*   `get-izban-stations` — Tüm İZBAN istasyonlarının tam listesini ID'leri ve isimleriyle birlikte döndürür.
+*   `get-izban-departures` — İki İZBAN istasyonu arasındaki planlanmış seferleri listeler.
+    *   `departureStationId` (string)
+    *   `arrivalStationId` (string)
+*   `get-izban-fare-tariff` — Banliyö fiyat tarifesini döndürür.
+    *   `BinisIstasyonuId` (string)
+    *   `InisIstasyonuId` (string)
+    *   `Aktarma` (string)
+    *   `httMi` (string)
 
 ### ESHOT
 
-ESHOT ile ilgili araçları sunucuya eklemek için:
-
 ```ts
 import { registerEshotTools } from 'izmir-mcp';
-// ...
 registerEshotTools(server);
 ```
 
 **Kullanılabilir Araçlar:**
 
-*   `get-eshot-stations`
-    *   **Açıklama:** Durak adı veya adresine göre arama yaparak eşleşen ESHOT durak kayıtlarını döndürür.
-    *   **Parametreler:**
-        *   `query` (string, opsiyonel): Aranacak durak adı veya adresi (örn: 'Alsancak').
-        *   `limit` (number, opsiyonel): Döndürülecek maksimum durak sayısı.
-*   `get-eshot-lines`
-    *   **Açıklama:** Hat numarası veya adına göre arama yaparak eşleşen ESHOT hat kayıtlarını döndürür.
-    *   **Parametreler:**
-        *   `query` (string, opsiyonel): Aranacak hat numarası veya adı (örn: '202' veya 'Bornova').
-        *   `limit` (number, opsiyonel): Döndürülecek maksimum hat sayısı.
-*   `get-line-approaching-buses`
-    *   **Açıklama:** Belirli bir hattaki otobüslerin belirli bir durağa yaklaşma durumunu gösterir.
-    *   **Parametreler:**
-        *   `hatNo` (string): Otobüs hat numarası (örn: '551').
-        *   `durakId` (string): Durak ID'si.
-*   `get-line-bus-locations`
-    *   **Açıklama:** Belirli bir hattaki tüm otobüslerin gerçek zamanlı konumlarını döndürür.
-    *   **Parametreler:**
-        *   `hatNo` (string): Otobüs hat numarası (örn: '551').
-*   `get-station-approaching-buses`
-    *   **Açıklama:** Belirli bir durağa yaklaşmakta olan tüm otobüslerin gerçek zamanlı konumlarını döndürür.
-    *   **Parametreler:**
-        *   `durakId` (string): Durak ID'si.
+*   `get-eshot-stations` — Durak adı veya adresine göre arama yaparak eşleşen ESHOT durak kayıtlarını döndürür.
+    *   `query` (string, opsiyonel)
+    *   `limit` (number, opsiyonel)
+*   `get-eshot-lines` — Hat numarası veya adına göre arama yaparak eşleşen ESHOT hat kayıtlarını döndürür.
+    *   `query` (string, opsiyonel)
+    *   `limit` (number, opsiyonel)
+*   `get-line-approaching-buses` — Belirli bir hattaki otobüslerin belirli bir durağa yaklaşma durumunu gösterir.
+    *   `hatNo` (string)
+    *   `durakId` (string)
+*   `get-line-bus-locations` — Belirli bir hattaki tüm otobüslerin gerçek zamanlı konumlarını döndürür.
+    *   `hatNo` (string)
+*   `get-station-approaching-buses` — Belirli bir durağa yaklaşmakta olan tüm otobüslerin gerçek zamanlı konumlarını döndürür.
+    *   `durakId` (string)
+*   `get-nearby-stations-by-coords` — Koordinata göre yakın ESHOT duraklarını döndürür.
+    *   `x` (number)
+    *   `y` (number)
+    *   `inCoordSys` (string, opsiyonel)
+    *   `outCoordSys` (string, opsiyonel)
+
+### Tramvay
+
+```ts
+import { registerTramTools } from 'izmir-mcp';
+registerTramTools(server);
+```
+
+**Kullanılabilir Araçlar:**
+
+*   `get-tram-lines` — Tüm tramvay hatlarını döndürür.
+*   `get-tram-stations-by-sefer-id` — Sefer numarasına göre tramvay istasyonlarını döndürür.
+    *   `seferId` (string)
+*   `get-tram-sefer-frequency-by-sefer-id` — Sefer numarasına göre tramvay sefer sıklıklarını döndürür.
+    *   `seferId` (string)
+
+### Metro
+
+```ts
+import { registerMetroTools } from 'izmir-mcp';
+registerMetroTools(server);
+```
+
+**Kullanılabilir Araçlar:**
+
+*   `get-metro-stations` — Tüm metro istasyonlarını, sıralama ve konum bilgileriyle döndürür.
+*   `get-metro-sefer-frequencies` — Metro sefer sıklıklarını döndürür.
+
+### Vapur (İzdeniz)
+
+```ts
+import { registerFerryTools } from 'izmir-mcp';
+registerFerryTools(server);
+```
+
+**Kullanılabilir Araçlar:**
+
+*   `get-ferry-timetables` — Vapur hareket saatlerini döndürür.
+    *   `kalkis` (string)
+    *   `varis` (string)
+    *   `gunTipi` (string)
+    *   `detay` (string)
+*   `get-ferry-timetables-by-pier` — İskele bazlı vapur hareket saatlerini döndürür.
+    *   `iskeleId` (string)
+    *   `gunId` (string)
+*   `get-ferry-working-days` — Vapurların çalışma günlerini döndürür.
+*   `get-ferry-piers` — Vapur ve arabalı vapur iskele bilgilerini döndürür.
+
+### Tren
+
+```ts
+import { registerTrainTools } from 'izmir-mcp';
+registerTrainTools(server);
+```
+
+**Kullanılabilir Araçlar:**
+
+*   `get-train-stations` — İzmir'deki tren garlarını ve konumlarını döndürür.
 
 ---
 
@@ -151,7 +209,7 @@ Bu proje topluluk katkılarına açıktır. Eğer bir hata bulduysanız, yeni bi
 1.  Projeyi "fork"layın.
 2.  Yeni bir "branch" oluşturun (`git checkout -b ozellik/yeni-bir-ozellik`).
 3.  Değişikliklerinizi "commit"leyin (`git commit -am 'Yeni bir özellik eklendi'`).
-4.  "Branch"inizi "push"layın (`git push origin ozellik/yeni-bir-ozellik`).
+4.  "Branch"'inizi "push"layın (`git push origin ozellik/yeni-bir-ozellik`).
 5.  Bir "Pull Request" oluşturun.
 
 ---
