@@ -1,4 +1,4 @@
-import { getIzbanDepartures, getIzbanStations } from "../api/izban.js";
+import { getIzbanDepartures, getIzbanFareTariff, getIzbanStations } from "../api/izban.js";
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import z from "zod";
@@ -46,6 +46,28 @@ export function registerIzbanTools(server: McpServer) {
           {
             type: "text",
             text: JSON.stringify(departures, null, 2),
+          },
+        ],
+      };
+    }
+  );
+
+  server.tool(
+    "get-izban-fare-tariff",
+    "Get suburban (İZBAN) fare tariff for a given boarding and alighting station, transfer, and httMi.",
+    {
+      BinisIstasyonuId: z.string().describe("Boarding station ID."),
+      InisIstasyonuId: z.string().describe("Alighting station ID."),
+      Aktarma: z.string().describe("Transfer (Aktarma) parameter, e.g. '0' or '1'."),
+      httMi: z.string().describe("HTT Mi parameter, e.g. '0' or '1'."),
+    },
+    async ({ BinisIstasyonuId, InisIstasyonuId, Aktarma, httMi }: { BinisIstasyonuId: string; InisIstasyonuId: string; Aktarma: string; httMi: string }) => {
+      const result = await getIzbanFareTariff(BinisIstasyonuId, InisIstasyonuId, Aktarma, httMi);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(result, null, 2),
           },
         ],
       };

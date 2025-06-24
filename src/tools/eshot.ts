@@ -2,6 +2,7 @@ import {
   getEshotLines,
   getEshotStations,
   getLineBusLocations,
+  getNearbyStationsByCoords,
   getNearestLineBusByStation,
   getStationNearestBus,
 } from "../api/eshot.js";
@@ -133,6 +134,40 @@ export function registerEshotTools(server: McpServer) {
     },
     async ({ durakId }: { durakId: string }) => {
       const result = await getStationNearestBus(durakId);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          },
+        ],
+      };
+    }
+  );
+
+  server.tool(
+    "get-nearby-stations-by-coords",
+    "Get nearby ESHOT stations by coordinates (longitude/latitude) and coordinate system.",
+    {
+      x: z
+        .number()
+        .describe("Longitude (x) coordinate, e.g. 27.051316"),
+      y: z
+        .number()
+        .describe("Latitude (y) coordinate, e.g. 38.513876"),
+      inCoordSys: z
+        .string()
+        .optional()
+        .default("EPSG:4326")
+        .describe("Input coordinate system, default is 'EPSG:4326'"),
+      outCoordSys: z
+        .string()
+        .optional()
+        .default("EPSG:4326")
+        .describe("Output coordinate system, default is 'EPSG:4326'"),
+    },
+    async ({ x, y, inCoordSys = "EPSG:4326", outCoordSys = "EPSG:4326" }: { x: number; y: number; inCoordSys?: string; outCoordSys?: string }) => {
+      const result = await getNearbyStationsByCoords(x, y, inCoordSys, outCoordSys);
       return {
         content: [
           {

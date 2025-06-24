@@ -1,11 +1,21 @@
 #!/usr/bin/env node
 
-import { registerEshotTools, registerIzbanTools } from "./tools/index.js";
+import {
+  registerEshotTools,
+  registerFerryTools,
+  registerIzbanTools,
+  registerTrainTools,
+  registerTramTools,
+} from "./tools/index.js";
+
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { server } from "./server.js";
 
 registerIzbanTools(server);
 registerEshotTools(server);
+registerTramTools(server);
+registerTrainTools(server);
+registerFerryTools(server);
 
 async function app() {
   const transport = new StdioServerTransport();

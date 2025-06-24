@@ -15,5 +15,10 @@ const getIzbanDepartures = async (
   return response.data;
 };
 
-export { getIzbanStations, getIzbanDepartures };
+const getIzbanFareTariff = async (BinisIstasyonuId: string, InisIstasyonuId: string, Aktarma: string, httMi: string) => {
+  const response = await baseApi.get(`/izban/tutarhesaplama/${BinisIstasyonuId}/${InisIstasyonuId}/${Aktarma}/${httMi}`);
+  return response.data;
+};
+
+export { getIzbanStations, getIzbanDepartures, getIzbanFareTariff };
 

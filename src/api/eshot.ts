@@ -46,11 +46,29 @@ const getNearestLineBusByStation = async (
   return response.data;
 };
 
+const getNearbyStationsByCoords = async (
+  x: number,
+  y: number,
+  inCoordSys: string = "EPSG:4326",
+  outCoordSys: string = "EPSG:4326"
+) => {
+  const response = await baseApi.get("/ibb/cbs/noktayayakinduraklar", {
+    params: {
+      x,
+      y,
+      inCoordSys,
+      outCoordSys,
+    },
+  });
+  return response.data;
+};
+
 export {
   getEshotStations,
   getEshotLines,
   getLineBusLocations,
   getStationNearestBus,
   getNearestLineBusByStation,
+  getNearbyStationsByCoords,
 };
 
