@@ -1,13 +1,36 @@
 import { baseApi } from "../http.js";
+import { ApiError } from "../types.js";
 
-const getMetroStations = async () => {
-  const response = await baseApi.get("/metro/istasyonlar");
-  return response.data;
+/**
+ * Get all metro stations in Izmir
+ * @returns Array of metro stations with location and order information
+ */
+const getMetroStations = async (): Promise<unknown> => {
+  try {
+    const response = await baseApi.get("/metro/istasyonlar");
+    return response.data;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError("Failed to fetch metro stations", undefined, error);
+  }
 };
 
-const getMetroSeferFrequencies = async () => {
-  const response = await baseApi.get("/metro/sefersaatleri");
-  return response.data;
+/**
+ * Get metro service frequencies/schedules
+ * @returns Metro service frequency information
+ */
+const getMetroSeferFrequencies = async (): Promise<unknown> => {
+  try {
+    const response = await baseApi.get("/metro/sefersaatleri");
+    return response.data;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError("Failed to fetch metro frequencies", undefined, error);
+  }
 };
 
 export { getMetroStations, getMetroSeferFrequencies }; 

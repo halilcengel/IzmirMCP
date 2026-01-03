@@ -4,6 +4,7 @@ import {
   registerEshotTools,
   registerFerryTools,
   registerIzbanTools,
+  registerMetroTools,
   registerTrainTools,
   registerTramTools,
 } from "./tools/index.js";
@@ -13,6 +14,7 @@ import { server } from "./server.js";
 
 registerIzbanTools(server);
 registerEshotTools(server);
+registerMetroTools(server);
 registerTramTools(server);
 registerTrainTools(server);
 registerFerryTools(server);

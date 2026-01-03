@@ -147,35 +147,52 @@ export function registerEshotTools(server: McpServer) {
 
   server.tool(
     "get-nearby-stations-by-coords",
-    "Get nearby ESHOT stations by coordinates (longitude/latitude) and coordinate system.",
+    "Get nearby ESHOT bus stations by geographic coordinates. Useful for finding the closest bus stops to a specific location in Izmir.",
     {
       x: z
         .number()
-        .describe("Longitude (x) coordinate, e.g. 27.051316"),
+        .min(-180)
+        .max(180)
+        .describe("Longitude (x) coordinate in decimal degrees (e.g., 27.051316 for Izmir city center)"),
       y: z
         .number()
-        .describe("Latitude (y) coordinate, e.g. 38.513876"),
+        .min(-90)
+        .max(90)
+        .describe("Latitude (y) coordinate in decimal degrees (e.g., 38.513876 for Izmir city center)"),
       inCoordSys: z
         .string()
         .optional()
         .default("EPSG:4326")
-        .describe("Input coordinate system, default is 'EPSG:4326'"),
+        .describe("Input coordinate system, default is 'EPSG:4326' (WGS84 lat/lon)"),
       outCoordSys: z
         .string()
         .optional()
         .default("EPSG:4326")
-        .describe("Output coordinate system, default is 'EPSG:4326'"),
+        .describe("Output coordinate system, default is 'EPSG:4326' (WGS84 lat/lon)"),
     },
     async ({ x, y, inCoordSys = "EPSG:4326", outCoordSys = "EPSG:4326" }: { x: number; y: number; inCoordSys?: string; outCoordSys?: string }) => {
-      const result = await getNearbyStationsByCoords(x, y, inCoordSys, outCoordSys);
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(result, null, 2),
-          },
-        ],
-      };
+      try {
+        const result = await getNearbyStationsByCoords(x, y, inCoordSys, outCoordSys);
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({ error: errorMessage, success: false }, null, 2),
+            },
+          ],
+          isError: true,
+        };
+      }
     }
   );
 } 

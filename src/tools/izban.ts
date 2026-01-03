@@ -54,23 +54,36 @@ export function registerIzbanTools(server: McpServer) {
 
   server.tool(
     "get-izban-fare-tariff",
-    "Get suburban (İZBAN) fare tariff for a given boarding and alighting station, transfer, and httMi.",
+    "Calculate the fare/price for an İZBAN suburban train journey between two stations. Factors in transfer status and HTT card usage for accurate pricing.",
     {
-      BinisIstasyonuId: z.string().describe("Boarding station ID."),
-      InisIstasyonuId: z.string().describe("Alighting station ID."),
-      Aktarma: z.string().describe("Transfer (Aktarma) parameter, e.g. '0' or '1'."),
-      httMi: z.string().describe("HTT Mi parameter, e.g. '0' or '1'."),
+      BinisIstasyonuId: z.string().min(1).describe("Boarding/departure station ID (get from get-izban-stations)"),
+      InisIstasyonuId: z.string().min(1).describe("Alighting/arrival station ID (get from get-izban-stations)"),
+      Aktarma: z.enum(["0", "1"]).describe("Transfer status: '0' for direct journey (no transfer), '1' for journey with transfer"),
+      httMi: z.enum(["0", "1"]).describe("HTT card usage: '0' for without HTT (Halk Taşıma Taşıtı) card, '1' for with HTT card (discounted fare)"),
     },
     async ({ BinisIstasyonuId, InisIstasyonuId, Aktarma, httMi }: { BinisIstasyonuId: string; InisIstasyonuId: string; Aktarma: string; httMi: string }) => {
-      const result = await getIzbanFareTariff(BinisIstasyonuId, InisIstasyonuId, Aktarma, httMi);
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(result, null, 2),
-          },
-        ],
-      };
+      try {
+        const result = await getIzbanFareTariff(BinisIstasyonuId, InisIstasyonuId, Aktarma, httMi);
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({ error: errorMessage, success: false }, null, 2),
+            },
+          ],
+          isError: true,
+        };
+      }
     }
   );
 } 
