@@ -1,226 +1,193 @@
-# IzmirMCP
+# IzmirMCP — Izmir Public Transport MCP Server
 
 [![NPM version](https://img.shields.io/npm/v/izmir-mcp.svg)](https://www.npmjs.com/package/izmir-mcp)
 [![License](https://img.shields.io/npm/l/izmir-mcp.svg)](https://github.com/halilcengel/IzmirMCP/blob/main/LICENSE)
 
-İzmir Büyükşehir Belediyesi'nin İZBAN, ESHOT, Tramvay, Metro, Vapur (İzdeniz) ve Tren sistemlerinden gerçek zamanlı toplu taşıma verilerini, MCP (Model Context Protocol) tabanlı bir TypeScript sunucusu aracılığıyla yapay zeka modellerine ve diğer uygulamalara kolayca entegre etmenizi sağlayan açık kaynaklı bir araç setidir.
+IzmirMCP, Izmir toplu tasima verilerini (IZBAN, ESHOT, Tramvay, Metro, Vapur/Izdeniz, Tren) Model Context Protocol (MCP) uzerinden sunan acik kaynakli bir TypeScript sunucusudur. AI asistanlari (Claude dahil) ve diger MCP istemcileri icin gerçek zamanli otobus konumlari, sefer saatleri ve durak bilgilerini kolayca erisilebilir hale getirir.
+
+SEO odakli anahtar kavramlar: Izmir toplu tasima API, gerçek zamanli otobus konumu, Izmir metro saatleri, IZBAN seferleri, ESHOT duraklari, MCP server, Model Context Protocol.
 
 ---
 
-## ✨ Özellikler
+## Neler Sunar?
 
-*   **🚉 İZBAN**
-    *   Tüm istasyonların listesini alın.
-    *   Belirli istasyonlar arasındaki sefer saatlerini sorgulayın.
-    *   Banliyö fiyat tarifesini sorgulayın.
-*   **🚌 ESHOT**
-    *   Durak ve hat adı veya numarasına göre arama yapın.
-    *   Bir durağa yaklaşan otobüsleri anlık olarak takip edin.
-    *   Belirli bir hattaki tüm araçların gerçek zamanlı GPS konumlarını alın.
-    *   Koordinata göre yakın durakları sorgulayın.
-*   **🚋 Tramvay**
-    *   Tramvay hatlarını, istasyonlarını ve sefer sıklıklarını sorgulayın.
-*   **🚇 Metro**
-    *   Metro istasyonlarını ve sefer sıklıklarını sorgulayın.
-*   **⛴️ Vapur (İzdeniz)**
-    *   Vapur iskeleleri, hareket saatleri ve çalışma günlerini sorgulayın.
-*   **🚂 Tren**
-    *   İzmir'deki tren garlarını ve konumlarını sorgulayın.
-*   **🔧 Kolay Entegrasyon**
-    *   Node.js/TypeScript ile hızlı ve modern bir altyapı.
-    *   Genişletilebilir ve modüler mimari.
-    *   Yapay zeka (AI) ve MCP tabanlı sistemlerle (Claude vb.) doğrudan uyumlu.
+- Izmir toplu tasima sistemleri icin tek noktadan MCP entegrasyonu
+- Gerçek zamanli veriler: otobus konumlari ve yaklaşan seferler
+- Sefer saatleri, istasyon/durak listeleri, hat aramalari
+- Moduler yapi: Izban, Eshot, Metro, Tramvay, Vapur ve Tren araclari
+- Node.js 18+ uyumlu, TypeScript ile gelistirilmis
 
 ---
 
-## 🚀 Kurulum
+## Desteklenen Sistemler ve Veri Tipleri
 
-1.  Depoyu klonlayın:
-
-    ```bash
-    git clone https://github.com/halilcengel/IzmirMCP.git
-    cd IzmirMCP
-    ```
-
-2.  Bağımlılıkları yükleyin:
-
-    ```bash
-    npm install
-    ```
-
-3.  Projeyi derleyin:
-
-    ```bash
-    npm run build
-    ```
+| Sistem | Sunulan Veriler |
+| --- | --- |
+| IZBAN | Istasyon listesi, seferler, ucret tarifesi |
+| ESHOT | Durak ve hat arama, yaklasan otobusler, GPS konumlari, yakindaki duraklar |
+| Tramvay | Hatlar, istasyonlar, sefer sikligi |
+| Metro | Istasyonlar, sefer sikligi |
+| Vapur (Izdeniz) | Iskeleler, hareket saatleri, calisma gunleri |
+| Tren | Gar listesi ve konum bilgileri |
 
 ---
 
-## 🛠️ Kullanım
+## Kurulum ve Hizli Baslangic
 
-Sunucuyu yerel olarak başlatmak için:
+### NPM ile Calistirma (onerilen)
 
 ```bash
 npx izmir-mcp
 ```
 
-Sunucu varsayılan olarak `3000` portunda çalışmaya başlayacaktır.
+Alternatif olarak global kurulum:
+
+```bash
+npm install -g izmir-mcp
+izmir-mcp
+```
+
+IzmirMCP, MCP stdio transport ile calisir; HTTP portu acmaz. MCP istemciniz bu sureci stdio uzerinden yonetir.
+
+### Kaynaktan Kurulum
+
+```bash
+git clone https://github.com/halilcengel/IzmirMCP.git
+cd IzmirMCP
+npm install
+npm run build
+npm start
+```
 
 ---
 
-## 🤖 Claude veya Diğer MCP İstemcilerine Ekleme
-
-`izmir-mcp` sunucusunu, Claude gibi bir MCP (Model Context Protocol) istemcisine entegre etmek için aşağıdaki gibi bir yapılandırma kullanabilirsiniz. Bu, yapay zeka modelinizin İzmir toplu taşıma verilerine doğrudan erişmesini sağlar.
+## MCP Istemcisi Yapilandirmasi (Claude, etc.)
 
 ```json
 {
   "mcpServers": {
     "izmir-mcp": {
       "command": "npx",
-      "args": [
-        "izmir-mcp"
-      ]
+      "args": ["izmir-mcp"]
     }
   }
 }
 ```
+
+---
+
+## Ornek Kullanim Senaryolari
+
+Asagidaki ornekler, bir MCP istemcisinde Izmir toplu tasima verilerini nasil sorgulayabileceginizi gosterir:
+
+```text
+ESHOT durak arama:
+"Alsancak" bolgesindeki ESHOT duraklarini getir.
+
+Hat uzerindeki otobus konumlari:
+Hat 551 icin tum otobuslerin anlik GPS konumlarini getir.
+
+Duraga yaklasan otobusler:
+Durak ID 12345 icin yaklasan otobusleri listele.
+
+IZBAN seferleri:
+Aliağa (123) ile Alsancak (456) arasindaki IZBAN seferlerini getir.
+
+Metro sefer sikligi:
+Izmir metro sefer sikligini getir.
+
+Vapur saatleri:
+Karsiyaka - Alsancak arasi hafta ici vapur saatlerini getir.
+```
+
+Isterseniz, bu istemleri MCP arac cagrisina da cevirtebilirsiniz.
+
+---
+
+## Araclar (Tools)
+
+### IZBAN
+- `get-izban-stations` — Istasyon listesi
+- `get-izban-departures` — Iki istasyon arasinda planli seferler
+- `get-izban-fare-tariff` — Ucret tarifesi hesaplama
+
+### ESHOT
+- `get-eshot-stations` — Durak arama
+- `get-eshot-lines` — Hat arama
+- `get-line-approaching-buses` — Belirli duraga yaklasan otobusler
+- `get-line-bus-locations` — Hat uzerindeki tum otobuslerin GPS konumu
+- `get-station-approaching-buses` — Duraga yaklasan tum otobusler
+- `get-nearby-stations-by-coords` — Koordinata gore yakindaki duraklar
+
+### Tramvay
+- `get-tram-lines` — Tum hatlar
+- `get-tram-stations-by-sefer-id` — Sefer ID ile istasyonlar
+- `get-tram-sefer-frequency-by-sefer-id` — Sefer sikligi
+
+### Metro
+- `get-metro-stations` — Istasyon listesi
+- `get-metro-sefer-frequencies` — Sefer sikligi
+
+### Vapur (Izdeniz)
+- `get-ferry-timetables` — Kalkis/varis ve gun tipine gore hareket saatleri
+- `get-ferry-timetables-by-pier` — Iskele bazli hareket saatleri
+- `get-ferry-working-days` — Calisma gunleri
+- `get-ferry-piers` — Iskele bilgileri
+
+### Tren
+- `get-train-stations` — Tren gar listesi
+
+---
+
+## Ortam Degiskenleri
+
+| Degisken | Varsayilan | Aciklama |
+| --- | --- | --- |
+| `MCP_NAME` | `IzmirMCP` | MCP sunucu adi |
+| `BASE_URL` | `https://openapi.izmir.bel.tr/api` | IBB OpenAPI base URL |
+| `CKAN_BASE_URL` | `https://acikveri.bizizmir.com/api/3/action` | Acik veri CKAN API base URL |
+| `ESHOT_HAT_RESOURCE_ID` | `bd6c84f8-49ba-4cf4-81f8-81a0fbb5caa3` | ESHOT hat verisi resource ID |
+| `ESHOT_DURAK_RESOURCE_ID` | `0c791266-a2e4-4f14-82b8-9a9b102fbf94` | ESHOT durak verisi resource ID |
+| `HTTP_TIMEOUT` | `10000` | HTTP istek zaman asimi (ms) |
+| `MAX_RETRIES` | `3` | Yeniden deneme sayisi |
+
+---
+
+## Veri Kaynaklari
+
+Veriler, Izmir Buyuksehir Belediyesi acik API ve acik veri kaynaklarindan alinmaktadir:
+
+- https://openapi.izmir.bel.tr/api
+- https://acikveri.bizizmir.com
+
+---
+
+## Ekran Goruntuleri
+
 ![Screenshot 2025-06-21 142156](https://github.com/user-attachments/assets/8fa2909d-7305-4a73-a95a-e0571075e15d)
 ![Screenshot 2025-06-21 142143](https://github.com/user-attachments/assets/17d000e7-18e9-44ac-aa21-000de072129b)
----
 ![Screenshot 2025-06-21 141825](https://github.com/user-attachments/assets/01753c47-fc4f-48b3-a9fe-e0899bf80df4)
 
 ---
 
-## 🧰 Araçlar (Tools)
+## Katkida Bulunma
 
-Bu proje, İZBAN, ESHOT, Tramvay, Metro, Vapur (İzdeniz) ve Tren servisleri için bir dizi araç sunar. Bu araçları kullanarak toplu taşıma verilerine programatik olarak erişebilirsiniz.
+Katkilar memnuniyetle karsilanir:
 
-### İZBAN
-
-```ts
-import { registerIzbanTools } from 'izmir-mcp';
-registerIzbanTools(server);
-```
-
-**Kullanılabilir Araçlar:**
-
-*   `get-izban-stations` — Tüm İZBAN istasyonlarının tam listesini ID'leri ve isimleriyle birlikte döndürür.
-*   `get-izban-departures` — İki İZBAN istasyonu arasındaki planlanmış seferleri listeler.
-    *   `departureStationId` (string)
-    *   `arrivalStationId` (string)
-*   `get-izban-fare-tariff` — Banliyö fiyat tarifesini döndürür.
-    *   `BinisIstasyonuId` (string)
-    *   `InisIstasyonuId` (string)
-    *   `Aktarma` (string)
-    *   `httMi` (string)
-
-### ESHOT
-
-```ts
-import { registerEshotTools } from 'izmir-mcp';
-registerEshotTools(server);
-```
-
-**Kullanılabilir Araçlar:**
-
-*   `get-eshot-stations` — Durak adı veya adresine göre arama yaparak eşleşen ESHOT durak kayıtlarını döndürür.
-    *   `query` (string, opsiyonel)
-    *   `limit` (number, opsiyonel)
-*   `get-eshot-lines` — Hat numarası veya adına göre arama yaparak eşleşen ESHOT hat kayıtlarını döndürür.
-    *   `query` (string, opsiyonel)
-    *   `limit` (number, opsiyonel)
-*   `get-line-approaching-buses` — Belirli bir hattaki otobüslerin belirli bir durağa yaklaşma durumunu gösterir.
-    *   `hatNo` (string)
-    *   `durakId` (string)
-*   `get-line-bus-locations` — Belirli bir hattaki tüm otobüslerin gerçek zamanlı konumlarını döndürür.
-    *   `hatNo` (string)
-*   `get-station-approaching-buses` — Belirli bir durağa yaklaşmakta olan tüm otobüslerin gerçek zamanlı konumlarını döndürür.
-    *   `durakId` (string)
-*   `get-nearby-stations-by-coords` — Koordinata göre yakın ESHOT duraklarını döndürür.
-    *   `x` (number)
-    *   `y` (number)
-    *   `inCoordSys` (string, opsiyonel)
-    *   `outCoordSys` (string, opsiyonel)
-
-### Tramvay
-
-```ts
-import { registerTramTools } from 'izmir-mcp';
-registerTramTools(server);
-```
-
-**Kullanılabilir Araçlar:**
-
-*   `get-tram-lines` — Tüm tramvay hatlarını döndürür.
-*   `get-tram-stations-by-sefer-id` — Sefer numarasına göre tramvay istasyonlarını döndürür.
-    *   `seferId` (string)
-*   `get-tram-sefer-frequency-by-sefer-id` — Sefer numarasına göre tramvay sefer sıklıklarını döndürür.
-    *   `seferId` (string)
-
-### Metro
-
-```ts
-import { registerMetroTools } from 'izmir-mcp';
-registerMetroTools(server);
-```
-
-**Kullanılabilir Araçlar:**
-
-*   `get-metro-stations` — Tüm metro istasyonlarını, sıralama ve konum bilgileriyle döndürür.
-*   `get-metro-sefer-frequencies` — Metro sefer sıklıklarını döndürür.
-
-### Vapur (İzdeniz)
-
-```ts
-import { registerFerryTools } from 'izmir-mcp';
-registerFerryTools(server);
-```
-
-**Kullanılabilir Araçlar:**
-
-*   `get-ferry-timetables` — Vapur hareket saatlerini döndürür.
-    *   `kalkis` (string)
-    *   `varis` (string)
-    *   `gunTipi` (string)
-    *   `detay` (string)
-*   `get-ferry-timetables-by-pier` — İskele bazlı vapur hareket saatlerini döndürür.
-    *   `iskeleId` (string)
-    *   `gunId` (string)
-*   `get-ferry-working-days` — Vapurların çalışma günlerini döndürür.
-*   `get-ferry-piers` — Vapur ve arabalı vapur iskele bilgilerini döndürür.
-
-### Tren
-
-```ts
-import { registerTrainTools } from 'izmir-mcp';
-registerTrainTools(server);
-```
-
-**Kullanılabilir Araçlar:**
-
-*   `get-train-stations` — İzmir'deki tren garlarını ve konumlarını döndürür.
+1. Depoyu fork'layin
+2. Yeni bir branch acin (`git checkout -b ozellik/yenilik`)
+3. Degisiklikleri commit'leyin
+4. Branch'i push'layin
+5. Pull Request olusturun
 
 ---
 
-## 🤝 Katkıda Bulunma
+## Lisans
 
-Bu proje topluluk katkılarına açıktır. Eğer bir hata bulduysanız, yeni bir özellik eklemek isterseniz veya mevcut kodu iyileştirmek isterseniz, lütfen bir "issue" açın veya "pull request" gönderin.
-
-1.  Projeyi "fork"layın.
-2.  Yeni bir "branch" oluşturun (`git checkout -b ozellik/yeni-bir-ozellik`).
-3.  Değişikliklerinizi "commit"leyin (`git commit -am 'Yeni bir özellik eklendi'`).
-4.  "Branch"'inizi "push"layın (`git push origin ozellik/yeni-bir-ozellik`).
-5.  Bir "Pull Request" oluşturun.
+Bu proje [ISC Lisansi](https://github.com/halilcengel/IzmirMCP/blob/main/LICENSE) altinda lisanslanmistir.
 
 ---
 
-## 📜 Lisans
+## Sorumluluk Reddi
 
-Bu proje [ISC Lisansı](https://github.com/halilcengel/IzmirMCP/blob/main/LICENSE) altında lisanslanmıştır.
-
----
-
-## ⚠️ Sorumluluk Reddi
-
-Bu proje, İzmir Büyükşehir Belediyesi'nin resmi bir uygulaması değildir. Veriler, herkese açık olan İBB API'lerinden alınmaktadır. Verilerin doğruluğu ve güncelliği konusunda herhangi bir garanti verilmemektedir. Proje, yalnızca bilgilendirme ve geliştirme amacıyla oluşturulmuştur.
-
+Bu proje Izmir Buyuksehir Belediyesi'nin resmi bir uygulamasi degildir. Veriler kamuya acik kaynaklardan alinmaktadir. Dogruluk ve guncellik konusunda garanti verilmez.

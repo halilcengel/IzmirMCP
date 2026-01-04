@@ -1,6 +1,6 @@
 const config = {
   name: process.env.MCP_NAME || "IzmirMCP",
-  version: "1.1.0",
+  version: "1.2.0",
   baseUrl: process.env.BASE_URL || "https://openapi.izmir.bel.tr/api",
   CKANBaseUrl: process.env.CKAN_BASE_URL || "https://acikveri.bizizmir.com/api/3/action",
   eshotHatResourceId: process.env.ESHOT_HAT_RESOURCE_ID || "bd6c84f8-49ba-4cf4-81f8-81a0fbb5caa3",
