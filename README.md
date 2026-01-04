@@ -167,6 +167,8 @@ Veriler, Izmir Buyuksehir Belediyesi acik API ve acik veri kaynaklarindan alinma
 ![Screenshot 2025-06-21 142156](https://github.com/user-attachments/assets/8fa2909d-7305-4a73-a95a-e0571075e15d)
 ![Screenshot 2025-06-21 142143](https://github.com/user-attachments/assets/17d000e7-18e9-44ac-aa21-000de072129b)
 ![Screenshot 2025-06-21 141825](https://github.com/user-attachments/assets/01753c47-fc4f-48b3-a9fe-e0899bf80df4)
+<img width="2032" height="1161" alt="image" src="https://github.com/user-attachments/assets/4e23a9e2-8f58-4583-93e2-ef685d6fe924" />
+<img width="1988" height="1117" alt="image" src="https://github.com/user-attachments/assets/4edc38c5-95a5-47e1-b996-d81918ae3c18" />
 
 ---
 
